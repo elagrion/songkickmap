@@ -72,21 +72,24 @@
 - (IBAction) getInfo
 {
 	self.modelData = [NSArray array];
-	NSURL* artistsURL = [NSURL URLWithString: @"http://api.songkick.com/api/3.0/users/oleg-agapov/artists/tracked.json?apikey=g8AWpOV7AEVTeDj7"];
+	NSURL* artistsURL = [NSURL URLWithString: @"http://api.songkick.com/api/3.0/users/oleg-agapov/artists/tracked.json?per_page=all&apikey=g8AWpOV7AEVTeDj7"];
 
 	NSData* data = [NSData dataWithContentsOfURL: artistsURL];
 	NSDictionary* artistsResponse = [NSJSONSerialization JSONObjectWithData: data options: 0 error: nil];
 
-
 	NSArray* artistsInfo = [[[artistsResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"artist"];
+
+	NSDateFormatter* responseFormatter = [[NSDateFormatter alloc] init];
+	responseFormatter.dateFormat = @"yyyy-MM-dd";
+	NSDateFormatter* displayFormatter = [[NSDateFormatter alloc] init];
+	displayFormatter.dateFormat = @"dMMM";
 
 	for (NSDictionary* artist in artistsInfo)
 	{
 		NSString* name = [artist objectForKey: @"displayName"];
 		NSArray* artistIdsArray = [artist objectForKey: @"identifier"];
 
-		NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-		formatter.dateFormat = @"yyyy-MM-dd";
+		
 
 		for (NSDictionary* artistId in artistIdsArray)
 		{
@@ -106,13 +109,14 @@
 				CGFloat lng = 0;
 				if (![lngStr isKindOfClass:[NSNull class]]) lng = [lngStr floatValue];
 
-				NSDate* start = [formatter dateFromString: [[event objectForKey: @"start"] objectForKey: @"date"]];
+				NSDate* start = [responseFormatter dateFromString: [[event objectForKey: @"start"] objectForKey: @"date"]];
 
 				//NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
 
 				SKAnnotation* annotation = [SKAnnotation new];
 				annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
-				annotation.title = name;
+				annotation.title = name;// stringByAppendingString: [displayFormatter stringFromDate: start]];
+				annotation.subtitle = [displayFormatter stringFromDate: start];
 				annotation.eventDate = start;
 				self.modelData = [self.modelData arrayByAddingObject: annotation];
 			}
@@ -131,10 +135,14 @@
 	if (!(result = [mapView dequeueReusableAnnotationViewWithIdentifier: @"SKConcertAnnotationView"]))
 	{
 		result = [[MKPinAnnotationView alloc] initWithAnnotation: annotation reuseIdentifier: @"SKConcertAnnotationView"];
+		result.canShowCallout = YES;
 	}
 	return result;
 }
 
-
+- (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+	NSLog(@"anotation: %@", view.annotation.title);
+}
 
 @end
