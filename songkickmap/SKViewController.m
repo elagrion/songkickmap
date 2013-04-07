@@ -51,19 +51,35 @@
 			NSArray* eventsArray = [[[eventResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"event"];
 			for (NSDictionary* event in eventsArray)
 			{
-				CGFloat lat = [[[event objectForKey: @"location"] objectForKey: @"lat"] floatValue];
-				CGFloat lan = [[[event objectForKey: @"location"] objectForKey: @"lan"] floatValue];
+				NSString* latStr = [[event objectForKey: @"location"] objectForKey: @"lat"];
+				CGFloat lat = 0;
+				if (![latStr isKindOfClass:[NSNull class]])	lat = [latStr floatValue];
 
-				NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
+				NSString* lngStr = [[event objectForKey: @"location"] objectForKey: @"lng"];
+				CGFloat lng = 0;
+				if (![lngStr isKindOfClass:[NSNull class]]) lng = [lngStr floatValue];
 
-				self.modelData = [self.modelData arrayByAddingObject: dict];
+				//NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
+
+				MKPointAnnotation* annotation = [MKPointAnnotation new];
+				annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
+				annotation.title = name;
+				self.modelData = [self.modelData arrayByAddingObject: annotation];
 			}
 		}
 	}
 
-	//now we have array with concerts. LETS SHOW IT ON MAP!!!
+	[self.mapView addAnnotations: self.modelData];
+}
 
-	
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id < MKAnnotation >)annotation
+{
+	MKAnnotationView* result = nil;
+	if (!(result = [mapView dequeueReusableAnnotationViewWithIdentifier: @"SKConcertAnnotationView"]))
+	{
+		result = [[MKPinAnnotationView alloc] initWithAnnotation: annotation reuseIdentifier: @"SKConcertAnnotationView"];
+	}
+	return result;
 }
 
 @end
