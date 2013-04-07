@@ -7,6 +7,7 @@
 //
 
 #import "SKViewController.h"
+#import "SKAnnotation.h"
 
 @interface SKViewController ()
 
@@ -17,7 +18,49 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+
+	self.fromDatePicker = [[UIDatePicker alloc] init];
+	self.fromDatePicker.datePickerMode = UIDatePickerModeDate;
+	[self.fromDatePicker addTarget:self action:@selector(dateChanged:) forControlEvents:UIControlEventValueChanged];
+
+	self.toDatePicker = [[UIDatePicker alloc] init];
+	self.toDatePicker.datePickerMode = UIDatePickerModeDate;
+	[self.toDatePicker addTarget:self action:@selector(dateChanged:) forControlEvents:UIControlEventValueChanged];
+
+
+	UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(finishDate:)];
+	[toolbar setItems:[NSArray arrayWithObject: doneButton]];
+
+	self.dateToolbar = toolbar;
+
+	self.fromDateSelect.inputView = self.fromDatePicker;
+	self.fromDateSelect.inputAccessoryView = self.dateToolbar;
+
+	self.toDateSelect.inputView = self.toDatePicker;
+	self.toDateSelect.inputAccessoryView = self.dateToolbar;
+}
+
+- (void) dateChanged: (UIDatePicker*) sender
+{
+	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateStyle:NSDateFormatterMediumStyle];
+	[formatter setTimeStyle:NSDateFormatterNoStyle];
+
+	UITextField* currField = sender == self.fromDatePicker ? self.fromDateSelect : self.toDateSelect;
+	currField.text = [formatter stringFromDate: [sender date]];
+}
+
+- (void) finishDate: (id) sender
+{
+	[self.toDateSelect endEditing: YES];
+	[self.fromDateSelect endEditing: YES];
+
+	[self.mapView removeAnnotations: self.modelData];
+
+	NSPredicate *predicate = [NSPredicate predicateWithFormat: @"(eventDate >= %@) AND (eventDate <= %@)", [self.fromDatePicker date], [self.toDatePicker date]];
+	NSArray* array = [self.modelData filteredArrayUsingPredicate: predicate];
+	[self.mapView addAnnotations: array];
 }
 
 - (void)didReceiveMemoryWarning
@@ -41,6 +84,10 @@
 	{
 		NSString* name = [artist objectForKey: @"displayName"];
 		NSArray* artistIdsArray = [artist objectForKey: @"identifier"];
+
+		NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+		formatter.dateFormat = @"yyyy-MM-dd";
+
 		for (NSDictionary* artistId in artistIdsArray)
 		{
 			NSURL* eventsURL = [NSURL URLWithString: [[artistId objectForKey: @"eventsHref"] stringByAppendingString: @"?apikey=g8AWpOV7AEVTeDj7"]];
@@ -59,11 +106,14 @@
 				CGFloat lng = 0;
 				if (![lngStr isKindOfClass:[NSNull class]]) lng = [lngStr floatValue];
 
+				NSDate* start = [formatter dateFromString: [[event objectForKey: @"start"] objectForKey: @"date"]];
+
 				//NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
 
-				MKPointAnnotation* annotation = [MKPointAnnotation new];
+				SKAnnotation* annotation = [SKAnnotation new];
 				annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
 				annotation.title = name;
+				annotation.eventDate = start;
 				self.modelData = [self.modelData arrayByAddingObject: annotation];
 			}
 		}
@@ -71,6 +121,9 @@
 
 	[self.mapView addAnnotations: self.modelData];
 }
+
+
+#pragma mark MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id < MKAnnotation >)annotation
 {
@@ -81,5 +134,7 @@
 	}
 	return result;
 }
+
+
 
 @end

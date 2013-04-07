@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		665320A5170B49BD00214E36 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665320A4170B49BD00214E36 /* MapKit.framework */; };
 		6661199D1711987D005C6741 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6661199C1711987D005C6741 /* CoreLocation.framework */; };
+		666119A01711B3B4005C6741 /* SKAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6661199F1711B3B4005C6741 /* SKAnnotation.m */; };
 		6696D8ED16FDD3050046D15F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6696D8EC16FDD3050046D15F /* UIKit.framework */; };
 		6696D8EF16FDD3050046D15F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6696D8EE16FDD3050046D15F /* Foundation.framework */; };
 		6696D8F116FDD3050046D15F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6696D8F016FDD3050046D15F /* CoreGraphics.framework */; };
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		665320A4170B49BD00214E36 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		6661199C1711987D005C6741 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		6661199E1711B3B4005C6741 /* SKAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKAnnotation.h; sourceTree = "<group>"; };
+		6661199F1711B3B4005C6741 /* SKAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKAnnotation.m; sourceTree = "<group>"; };
 		6696D8E916FDD3050046D15F /* songkickmap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = songkickmap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6696D8EC16FDD3050046D15F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6696D8EE16FDD3050046D15F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +94,8 @@
 		6696D8F216FDD3050046D15F /* songkickmap */ = {
 			isa = PBXGroup;
 			children = (
+				6661199E1711B3B4005C6741 /* SKAnnotation.h */,
+				6661199F1711B3B4005C6741 /* SKAnnotation.m */,
 				6696D8FB16FDD3050046D15F /* SKAppDelegate.h */,
 				6696D8FC16FDD3050046D15F /* SKAppDelegate.m */,
 				6696D90416FDD3050046D15F /* MainStoryboard.storyboard */,
@@ -185,6 +190,7 @@
 				6696D8F916FDD3050046D15F /* main.m in Sources */,
 				6696D8FD16FDD3050046D15F /* SKAppDelegate.m in Sources */,
 				6696D90916FDD3050046D15F /* SKViewController.m in Sources */,
+				666119A01711B3B4005C6741 /* SKAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

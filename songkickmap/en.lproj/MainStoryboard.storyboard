@@ -13,36 +13,64 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CMU-MA-Li7">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="508" id="Rr0-Cz-nMF"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="2" id="R45-wr-Cxt"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PSq-Zi-lxN">
-                                <fontDescription key="fontDescription" type="boldSystem" size="button"/>
-                                <state key="normal">
-                                    <color key="titleColor" red="0.19607843137254902" green="0.30980392156862746" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tFn-eQ-2ds">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="cWn-Gl-EPA"/>
+                                    <constraint firstAttribute="height" constant="30" id="tQd-Ia-r61"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="01x-fg-2Fc">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="5Dp-zg-cAa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y0k-Y9-I2q">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="73" id="rzD-5u-WjA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="getdata">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="getInfo" destination="2" eventType="touchUpInside" id="6qr-oP-w7O"/>
+                                    <action selector="getInfo" destination="2" eventType="touchUpInside" id="tTj-Qd-RUG"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="CMU-MA-Li7" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="41N-wA-Bt2"/>
-                            <constraint firstAttribute="trailing" secondItem="PSq-Zi-lxN" secondAttribute="trailing" constant="7" id="TrL-gd-LB8"/>
-                            <constraint firstItem="PSq-Zi-lxN" firstAttribute="top" secondItem="3" secondAttribute="top" constant="6" id="VdP-nA-JUI"/>
+                            <constraint firstItem="tFn-eQ-2ds" firstAttribute="top" secondItem="01x-fg-2Fc" secondAttribute="top" type="default" id="8Xr-xg-3UK"/>
+                            <constraint firstAttribute="trailing" secondItem="y0k-Y9-I2q" secondAttribute="trailing" constant="5" id="Kd2-ae-iIq"/>
+                            <constraint firstItem="tFn-eQ-2ds" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="8" id="Ltc-V1-JDV"/>
+                            <constraint firstItem="01x-fg-2Fc" firstAttribute="bottom" secondItem="tFn-eQ-2ds" secondAttribute="bottom" type="default" id="XVI-8b-QSQ"/>
+                            <constraint firstItem="y0k-Y9-I2q" firstAttribute="bottom" secondItem="01x-fg-2Fc" secondAttribute="bottom" type="default" id="YBS-Uh-ENh"/>
+                            <constraint firstAttribute="bottom" secondItem="tFn-eQ-2ds" secondAttribute="bottom" constant="5" id="YKO-X7-y51"/>
                             <constraint firstItem="CMU-MA-Li7" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="b0u-fQ-anX"/>
                             <constraint firstItem="CMU-MA-Li7" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="hS4-vo-gPR"/>
-                            <constraint firstItem="CMU-MA-Li7" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="zm9-5P-vkr"/>
+                            <constraint firstItem="01x-fg-2Fc" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="123" id="izp-5d-hof"/>
+                            <constraint firstItem="01x-fg-2Fc" firstAttribute="top" secondItem="y0k-Y9-I2q" secondAttribute="top" type="default" id="x6p-bJ-T5h"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="fromDateSelect" destination="tFn-eQ-2ds" id="hFc-bN-tXJ"/>
                         <outlet property="mapView" destination="CMU-MA-Li7" id="2d3-Za-zDr"/>
+                        <outlet property="toDateSelect" destination="01x-fg-2Fc" id="HR0-Y2-1CS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -56,7 +84,10 @@
         <class className="SKViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SKViewController.h"/>
             <relationships>
+                <relationship kind="action" name="getInfo"/>
+                <relationship kind="outlet" name="fromDateSelect" candidateClass="UITextField"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+                <relationship kind="outlet" name="toDateSelect" candidateClass="UITextField"/>
             </relationships>
         </class>
     </classes>

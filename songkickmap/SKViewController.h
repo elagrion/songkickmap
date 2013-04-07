@@ -14,4 +14,12 @@
 @property (weak, nonatomic) IBOutlet MKMapView* mapView;
 @property (strong) NSArray* modelData;
 
+@property (nonatomic, retain) UIDatePicker* fromDatePicker;
+@property (nonatomic, retain) UIDatePicker* toDatePicker;
+@property (weak, nonatomic) IBOutlet UITextField *fromDateSelect;
+@property (weak, nonatomic) IBOutlet UITextField *toDateSelect;
+@property (nonatomic, retain) UIToolbar *dateToolbar;
+
+- (IBAction) getInfo;
+
 @end
