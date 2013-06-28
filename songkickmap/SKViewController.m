@@ -74,56 +74,64 @@
 	self.modelData = [NSArray array];
 	NSURL* artistsURL = [NSURL URLWithString: @"http://api.songkick.com/api/3.0/users/oleg-agapov/artists/tracked.json?per_page=all&apikey=g8AWpOV7AEVTeDj7"];
 
-	NSData* data = [NSData dataWithContentsOfURL: artistsURL];
-	NSDictionary* artistsResponse = [NSJSONSerialization JSONObjectWithData: data options: 0 error: nil];
+	dispatch_async(dispatch_get_global_queue(0, 0), ^{
+		NSData* data = [NSData dataWithContentsOfURL: artistsURL];
+		NSError* serializationError = nil;
+		NSDictionary* artistsResponse = [NSJSONSerialization JSONObjectWithData: data options: 0 error: &serializationError];
 
-	NSArray* artistsInfo = [[[artistsResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"artist"];
-
-	NSDateFormatter* responseFormatter = [[NSDateFormatter alloc] init];
-	responseFormatter.dateFormat = @"yyyy-MM-dd";
-	NSDateFormatter* displayFormatter = [[NSDateFormatter alloc] init];
-	displayFormatter.dateFormat = @"dMMM";
-
-	for (NSDictionary* artist in artistsInfo)
-	{
-		NSString* name = [artist objectForKey: @"displayName"];
-		NSArray* artistIdsArray = [artist objectForKey: @"identifier"];
-
-		
-
-		for (NSDictionary* artistId in artistIdsArray)
+		if (serializationError)
 		{
-			NSURL* eventsURL = [NSURL URLWithString: [[artistId objectForKey: @"eventsHref"] stringByAppendingString: @"?apikey=g8AWpOV7AEVTeDj7"]];
+			NSLog(@"getInfo JSON serialization: %@", serializationError);
+			return;
+		}
+		NSArray* artistsInfo = [[[artistsResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"artist"];
 
-			NSData* data = [NSData dataWithContentsOfURL: eventsURL];
-			NSDictionary* eventResponse = [NSJSONSerialization JSONObjectWithData: data options: 0 error: nil];
+		NSDateFormatter* responseFormatter = [[NSDateFormatter alloc] init];
+		responseFormatter.dateFormat = @"yyyy-MM-dd";
+		NSDateFormatter* displayFormatter = [[NSDateFormatter alloc] init];
+		displayFormatter.dateFormat = @"dMMM";
 
-			NSArray* eventsArray = [[[eventResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"event"];
-			for (NSDictionary* event in eventsArray)
+		for (NSDictionary* artist in artistsInfo)
+		{
+			NSString* name = [artist objectForKey: @"displayName"];
+			NSArray* artistIdsArray = [artist objectForKey: @"identifier"];
+
+			
+
+			for (NSDictionary* artistId in artistIdsArray)
 			{
-				NSString* latStr = [[event objectForKey: @"location"] objectForKey: @"lat"];
-				CGFloat lat = 0;
-				if (![latStr isKindOfClass:[NSNull class]])	lat = [latStr floatValue];
+				NSURL* eventsURL = [NSURL URLWithString: [[artistId objectForKey: @"eventsHref"] stringByAppendingString: @"?apikey=g8AWpOV7AEVTeDj7"]];
 
-				NSString* lngStr = [[event objectForKey: @"location"] objectForKey: @"lng"];
-				CGFloat lng = 0;
-				if (![lngStr isKindOfClass:[NSNull class]]) lng = [lngStr floatValue];
+				NSData* data = [NSData dataWithContentsOfURL: eventsURL];
+				NSDictionary* eventResponse = [NSJSONSerialization JSONObjectWithData: data options: 0 error: nil];
 
-				NSDate* start = [responseFormatter dateFromString: [[event objectForKey: @"start"] objectForKey: @"date"]];
+				NSArray* eventsArray = [[[eventResponse objectForKey: @"resultsPage"] objectForKey: @"results"] objectForKey: @"event"];
+				for (NSDictionary* event in eventsArray)
+				{
+					NSString* latStr = [[event objectForKey: @"location"] objectForKey: @"lat"];
+					CGFloat lat = 0;
+					if (![latStr isKindOfClass:[NSNull class]])	lat = [latStr floatValue];
 
-				//NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
+					NSString* lngStr = [[event objectForKey: @"location"] objectForKey: @"lng"];
+					CGFloat lng = 0;
+					if (![lngStr isKindOfClass:[NSNull class]]) lng = [lngStr floatValue];
 
-				SKAnnotation* annotation = [SKAnnotation new];
-				annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
-				annotation.title = name;// stringByAppendingString: [displayFormatter stringFromDate: start]];
-				annotation.subtitle = [displayFormatter stringFromDate: start];
-				annotation.eventDate = start;
-				self.modelData = [self.modelData arrayByAddingObject: annotation];
+					NSDate* start = [responseFormatter dateFromString: [[event objectForKey: @"start"] objectForKey: @"date"]];
+
+					//NSDictionary* dict = @{@"name": name, @"lat": [NSNumber numberWithFloat: lat], @"lan": [NSNumber numberWithFloat: lan]};
+
+					SKAnnotation* annotation = [SKAnnotation new];
+					annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
+					annotation.title = name;// stringByAppendingString: [displayFormatter stringFromDate: start]];
+					annotation.subtitle = [displayFormatter stringFromDate: start];
+					annotation.eventDate = start;
+					self.modelData = [self.modelData arrayByAddingObject: annotation];
+				}
 			}
 		}
-	}
 
-	[self.mapView addAnnotations: self.modelData];
+		[self.mapView addAnnotations: self.modelData];
+	});
 }
 
 
